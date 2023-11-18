@@ -13,25 +13,25 @@ struct ContentView: View {
         var result = 0.0
         if inputUnit == "seconds", outputUnit == "seconds" {
             result = inputNumber
-        } else if outputUnit == "minutes" {
-            result = inputNumber * 60
-        } else if outputUnit == "hours" {
-            result = inputNumber * 360
+        } else if inputUnit == "seconds", outputUnit == "minutes" {
+            result = inputNumber / 60
+        } else if inputUnit == "seconds", outputUnit == "hours" {
+            result = inputNumber / 360
         }
         
         if inputUnit == "minutes", outputUnit == "seconds" {
-            result = inputNumber / 60
-        } else if outputUnit == "minutes" {
-            result = inputNumber
-        } else if outputUnit == "hours" {
             result = inputNumber * 60
+        } else if inputUnit == "minutes", outputUnit == "minutes" {
+            result = inputNumber
+        } else if inputUnit == "minutes", outputUnit == "hours" {
+            result = inputNumber / 60
         }
         
         if inputUnit == "hours", outputUnit == "seconds" {
-            result = inputNumber / 360
-        } else if outputUnit == "minutes" {
-            result = inputNumber / 60
-        } else if outputUnit == "hours" {
+            result = inputNumber * 360
+        } else if inputUnit == "hours", outputUnit == "minutes" {
+            result = inputNumber * 60
+        } else if inputUnit == "hours", outputUnit == "hours" {
             result = inputNumber
         }
         return result
