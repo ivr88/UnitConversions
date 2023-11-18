@@ -1,21 +1,80 @@
-//
-//  ContentView.swift
-//  UnitConversions
-//
-//  Created by Вадим Исламов on 12.11.2023.
-//
-
 import SwiftUI
 
 struct ContentView: View {
-    var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+    @FocusState private var inputIsFocused: Bool
+    
+    @State private var inputNumber = 0.0
+    @State private var inputUnit = ""
+    @State private var outputUnit = ""
+    
+    let unitMassive = ["seconds", "minutes", "hours"]
+    
+    func outputNumber() -> Double {
+        var result = 0.0
+        if inputUnit == "seconds", outputUnit == "seconds" {
+            result = inputNumber
+        } else if outputUnit == "minutes" {
+            result = inputNumber * 60
+        } else if outputUnit == "hours" {
+            result = inputNumber * 360
         }
-        .padding()
+        
+        if inputUnit == "minutes", outputUnit == "seconds" {
+            result = inputNumber / 60
+        } else if outputUnit == "minutes" {
+            result = inputNumber
+        } else if outputUnit == "hours" {
+            result = inputNumber * 60
+        }
+        
+        if inputUnit == "hours", outputUnit == "seconds" {
+            result = inputNumber / 360
+        } else if outputUnit == "minutes" {
+            result = inputNumber / 60
+        } else if outputUnit == "hours" {
+            result = inputNumber
+        }
+        return result
+    }
+    
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section ("Input number") {
+                    TextField ("Input number", value: $inputNumber, format: .number)
+                }
+                .keyboardType(.decimalPad)
+                .focused($inputIsFocused)
+                
+                Section ("Choose input unit") {
+                    Picker ("Input Unit", selection: $inputUnit) {
+                        ForEach(unitMassive, id: \.self) {
+                            Text("You choose: \($0)")
+                        }
+                    }
+                }
+                
+                Section ("Choose output unit") {
+                    Picker ("Output Unit", selection: $outputUnit) {
+                        ForEach(unitMassive, id: \.self) {
+                            Text("You choose: \($0)")
+                        }
+                    }
+                }
+                
+                Section ("Output number")  {
+                    Text ("\(outputNumber().formatted())")
+                }
+            }
+            .navigationTitle("UnitConversions")
+            .toolbar {
+                if inputIsFocused {
+                    Button("Done") {
+                        inputIsFocused = false
+                    }
+                }
+            }
+        }
     }
 }
 
